@@ -49,6 +49,23 @@ const SLOT_REQ_COLOR_CLASS = {
   [SLOT_REQ.DPS_CASTER]: "role-dps",
 };
 
+function roleIconUrl(key) {
+  return `assets/icons/roles/${key}.png`;
+}
+
+// FREE以外の各スロット要求に対応するロールアイコン画像。
+// 純/バリアヒーラーは公式アイコンが同一のため、隅にラベルを重ねて区別する。
+const SLOT_REQ_ICON = {
+  [SLOT_REQ.TANK]: { icon: roleIconUrl("tank") },
+  [SLOT_REQ.HEALER]: { icon: roleIconUrl("healer") },
+  [SLOT_REQ.HEALER_PURE]: { icon: roleIconUrl("healer"), corner: "ピ" },
+  [SLOT_REQ.HEALER_BARRIER]: { icon: roleIconUrl("healer"), corner: "バ" },
+  [SLOT_REQ.DPS]: { icon: roleIconUrl("dps") },
+  [SLOT_REQ.DPS_MELEE]: { icon: roleIconUrl("melee") },
+  [SLOT_REQ.DPS_RANGED]: { icon: roleIconUrl("ranged") },
+  [SLOT_REQ.DPS_CASTER]: { icon: roleIconUrl("caster") },
+};
+
 function nextSlotRequirement(current) {
   const index = SLOT_REQ_CYCLE.indexOf(current);
   return SLOT_REQ_CYCLE[(index + 1) % SLOT_REQ_CYCLE.length];

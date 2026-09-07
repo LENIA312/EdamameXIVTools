@@ -42,3 +42,7 @@ const JOBS = [
 ];
 
 const JOBS_BY_ID = Object.fromEntries(JOBS.map((job) => [job.id, job]));
+
+function jobIconUrl(jobId) {
+  return `assets/icons/jobs/${jobId}.png`;
+}

@@ -28,7 +28,7 @@ function renderRoleIcons() {
     const icon = document.createElement("button");
     icon.type = "button";
     icon.className = `role-icon ${SLOT_REQ_COLOR_CLASS[req]}${enabled ? "" : " role-icon-disabled"}`;
-    icon.textContent = roleReqShortLabel(req);
+    icon.innerHTML = roleIconMarkup(req);
     icon.title = SLOT_REQ_LABEL[req];
     icon.disabled = !enabled;
     icon.addEventListener("click", () => cycleRoleSlot(i));
@@ -36,29 +36,11 @@ function renderRoleIcons() {
   }
 }
 
-function roleReqShortLabel(req) {
-  switch (req) {
-    case SLOT_REQ.FREE:
-      return "・";
-    case SLOT_REQ.TANK:
-      return "T";
-    case SLOT_REQ.HEALER:
-      return "H";
-    case SLOT_REQ.HEALER_PURE:
-      return "Hピ";
-    case SLOT_REQ.HEALER_BARRIER:
-      return "Hバ";
-    case SLOT_REQ.DPS:
-      return "D";
-    case SLOT_REQ.DPS_MELEE:
-      return "D近";
-    case SLOT_REQ.DPS_RANGED:
-      return "Dレ";
-    case SLOT_REQ.DPS_CASTER:
-      return "D遠";
-    default:
-      return "?";
-  }
+function roleIconMarkup(req) {
+  const entry = SLOT_REQ_ICON[req];
+  if (!entry) return `<span class="role-icon-free">・</span>`;
+  const corner = entry.corner ? `<span class="role-icon-corner">${entry.corner}</span>` : "";
+  return `<img src="${entry.icon}" alt="${SLOT_REQ_LABEL[req]}" class="role-icon-img">${corner}`;
 }
 
 function renderCharacterList() {
@@ -102,7 +84,7 @@ function renderCharacterRow(index) {
   const resultJobId = state.results[index];
   if (resultJobId) {
     const job = JOBS_BY_ID[resultJobId];
-    resultBadge.innerHTML = `<span class="job-badge ${roleColorClassForJob(job)}">${job.id}</span><span class="job-name">${job.nameJa}</span>`;
+    resultBadge.innerHTML = `<img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img"><span class="job-name">${job.nameJa}</span>`;
   }
   row.appendChild(resultBadge);
 
@@ -267,7 +249,8 @@ function openJobsModal(slotIndex) {
     const checked = !character.excludedJobIds.has(job.id);
     label.innerHTML = `
       <input type="checkbox" ${checked ? "checked" : ""}>
-      <span>${job.id} ${escapeHtml(job.nameJa)}</span>
+      <img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img job-icon-img-small">
+      <span>${escapeHtml(job.nameJa)}</span>
       <span class="job-level">Lv.${level}</span>
     `;
     label.querySelector("input").addEventListener("change", () => {
