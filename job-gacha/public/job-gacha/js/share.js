@@ -9,64 +9,135 @@ function loadImage(src) {
   });
 }
 
+function roundedRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawRoundedImage(ctx, img, x, y, size, r) {
+  ctx.save();
+  roundedRectPath(ctx, x, y, size, size, r);
+  ctx.clip();
+  ctx.drawImage(img, x, y, size, size);
+  ctx.restore();
+}
+
+const ROLE_ACCENT = {
+  [ROLE.TANK]: "#3d7fd1",
+  [ROLE.HEALER]: "#45b26b",
+  [ROLE.DPS]: "#e14c5a",
+};
+
 async function buildResultCanvas(entries) {
-  const rowHeight = 64;
-  const paddingX = 32;
-  const headerHeight = 90;
-  const footerHeight = 44;
-  const width = 640;
-  const height = headerHeight + entries.length * rowHeight + footerHeight;
+  const scale = 2; // 高解像度化
+  const rowHeight = 76;
+  const cardPaddingX = 36;
+  const cardHeaderHeight = 110;
+  const cardFooterHeight = 56;
+  const margin = 28;
+  const width = 760;
+  const cardHeight = cardHeaderHeight + entries.length * rowHeight + cardFooterHeight;
+  const height = cardHeight + margin * 2;
 
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
   const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
 
-  // 背景
-  ctx.fillStyle = "#fffafc";
+  // 背景(斜めグラデーション)
+  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+  bgGradient.addColorStop(0, "#ffffff");
+  bgGradient.addColorStop(1, "#ffe3ee");
+  ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, width, height);
 
-  // ヘッダー
-  ctx.fillStyle = "#ff4f8b";
-  ctx.fillRect(0, 0, width, headerHeight);
+  // カード(白背景+ピンク枠、影付き)
+  const cardX = margin;
+  const cardY = margin;
+  const cardW = width - margin * 2;
+
+  ctx.save();
+  ctx.shadowColor = "rgba(255, 79, 139, 0.25)";
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetY = 8;
+  roundedRectPath(ctx, cardX, cardY, cardW, cardHeight, 28);
   ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 28px sans-serif";
-  ctx.textBaseline = "middle";
-  ctx.fillText("ジョブガチャ 結果", paddingX, headerHeight / 2);
+  ctx.fill();
+  ctx.restore();
+
+  roundedRectPath(ctx, cardX, cardY, cardW, cardHeight, 28);
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "#ff4f8b";
+  ctx.stroke();
+
+  // ヘッダー
+  ctx.fillStyle = "#d63d73";
+  ctx.font = "bold 34px sans-serif";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText("🎲 ジョブガチャ 抽選結果", cardX + cardPaddingX, cardY + 56);
+
+  ctx.strokeStyle = "#ffe3ee";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cardX + cardPaddingX, cardY + cardHeaderHeight - 12);
+  ctx.lineTo(cardX + cardW - cardPaddingX, cardY + cardHeaderHeight - 12);
+  ctx.stroke();
 
   const jobIcons = await Promise.all(
     entries.map((e) => loadImage(jobIconUrl(e.job.id)).catch(() => null))
   );
 
   entries.forEach((entry, i) => {
-    const y = headerHeight + i * rowHeight;
-    ctx.strokeStyle = "#ffe3ee";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(paddingX, y);
-    ctx.lineTo(width - paddingX, y);
-    ctx.stroke();
+    const rowY = cardY + cardHeaderHeight + i * rowHeight;
+    const rowCenterY = rowY + rowHeight / 2;
 
-    const iconSize = 40;
-    const iconY = y + (rowHeight - iconSize) / 2;
+    // ロールカラーのアクセントバー
+    const accent = ROLE_ACCENT[entry.job.role] || "#c9c9c9";
+    ctx.fillStyle = accent;
+    roundedRectPath(ctx, cardX + cardPaddingX, rowY + 14, 5, rowHeight - 28, 3);
+    ctx.fill();
+
+    const iconSize = 48;
+    const iconX = cardX + cardPaddingX + 20;
+    const iconY = rowCenterY - iconSize / 2;
     const icon = jobIcons[i];
     if (icon) {
-      ctx.drawImage(icon, paddingX, iconY, iconSize, iconSize);
+      drawRoundedImage(ctx, icon, iconX, iconY, iconSize, 12);
     }
 
+    const textX = iconX + iconSize + 18;
     ctx.fillStyle = "#2b2b2b";
-    ctx.font = "bold 18px sans-serif";
-    ctx.fillText(entry.character.name, paddingX + iconSize + 16, y + rowHeight / 2 - 12);
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText(entry.character.name, textX, rowCenterY - 4);
 
     ctx.fillStyle = "#8a8a8a";
-    ctx.font = "14px sans-serif";
-    ctx.fillText(`${entry.job.id} ${entry.job.nameJa}`, paddingX + iconSize + 16, y + rowHeight / 2 + 12);
+    ctx.font = "15px sans-serif";
+    ctx.fillText(entry.job.nameJa, textX, rowCenterY + 20);
+
+    if (i < entries.length - 1) {
+      ctx.strokeStyle = "#fbeef4";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cardX + cardPaddingX, rowY + rowHeight);
+      ctx.lineTo(cardX + cardW - cardPaddingX, rowY + rowHeight);
+      ctx.stroke();
+    }
   });
 
-  ctx.fillStyle = "#8a8a8a";
-  ctx.font = "12px sans-serif";
+  // フッター(ブランド)
+  const footerY = cardY + cardHeaderHeight + entries.length * rowHeight + cardFooterHeight / 2;
+  ctx.fillStyle = "#c9c9c9";
+  ctx.font = "13px sans-serif";
   ctx.textAlign = "right";
-  ctx.fillText("edamame.tools.pisorium.com", width - paddingX, height - footerHeight / 2);
+  ctx.fillText("🫛 まめツール / edamame.tools.pisorium.com", cardX + cardW - cardPaddingX, footerY + 4);
   ctx.textAlign = "left";
 
   return canvas;
@@ -94,11 +165,7 @@ async function shareDrawResult(entries) {
 
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({
-        files: [file],
-        title: "ジョブガチャ結果",
-        text: "ジョブガチャで抽選した結果です",
-      });
+      await navigator.share({ files: [file] });
       return { shared: true };
     } catch (err) {
       if (err && err.name === "AbortError") return { shared: false, cancelled: true };

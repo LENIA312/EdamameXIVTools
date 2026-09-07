@@ -86,7 +86,7 @@ function renderCharacterRow(index) {
   const resultJobId = state.results[index];
   if (resultJobId) {
     const job = JOBS_BY_ID[resultJobId];
-    resultBadge.innerHTML = `<img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img"><span class="job-name">${job.nameJa}</span>`;
+    resultBadge.innerHTML = `<span class="job-name">${job.nameJa}</span><img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img">`;
   }
   row.appendChild(resultBadge);
 

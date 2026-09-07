@@ -231,6 +231,7 @@ body {
 
 .name-field {
   flex: 1;
+  min-width: 0;
   text-align: left;
   background: none;
   border: none;
@@ -239,6 +240,12 @@ body {
   flex-direction: column;
   padding: 0;
 }
+.name-field .placeholder,
+.char-name, .char-world {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .name-field .placeholder { color: var(--muted); }
 .char-name { font-weight: 700; font-size: 15px; }
 .char-world { font-size: 12px; color: var(--muted); }
@@ -246,8 +253,10 @@ body {
 .result-badge {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
-  min-width: 100px;
+  width: 104px;
+  flex: none;
 }
 .job-icon-img {
   width: 32px;
@@ -256,7 +265,15 @@ body {
   flex: none;
 }
 .job-icon-img-small { width: 24px; height: 24px; }
-.job-name { font-size: 12px; color: var(--muted); }
+.job-name {
+  font-size: 12px;
+  color: var(--muted);
+  width: 68px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .icon-btn {
   width: 32px;
@@ -382,7 +399,17 @@ body {
 .job-level { margin-left: auto; color: var(--muted); font-size: 12px; }
 
 @media (max-width: 560px) {
-  .header { flex-direction: column; }
-  .char-row { flex-wrap: wrap; }
+  body { padding: 16px 8px 32px; }
+  .header { flex-direction: column; padding: 14px 12px; gap: 12px; }
+  .role-icons { gap: 3px; }
+  .role-icon { width: 28px; height: 28px; }
+  .role-icon-img { width: 20px; height: 20px; }
+  .role-icon-corner { font-size: 7px; padding: 1px 2px; }
+  .char-row { padding: 8px 10px; gap: 8px; }
+  .result-badge { width: 84px; }
+  .job-name { width: 52px; font-size: 11px; }
+  .job-icon-img { width: 26px; height: 26px; }
   .job-grid { grid-template-columns: 1fr; }
+  .options-row { gap: 12px; font-size: 13px; }
+  .search-form-row { flex-direction: column; }
 }
