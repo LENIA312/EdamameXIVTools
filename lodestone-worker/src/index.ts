@@ -1,9 +1,11 @@
 import { parseCharacterClassJobs, parseSearchResults } from "./parse";
 
-// Lodestoneのキャラクター検索・詳細は地域(jp/na/eu)を問わず同一のグローバルDBを
-// 参照するため(worldnameで検索した際に全地域とも同一の結果が返ることを確認済み)、
-// 常に単一のホストで問い合わせる。
-const LODESTONE_HOST = "na.finalfantasyxiv.com";
+// worldname指定ありの検索・キャラクターID指定の詳細取得は、地域(jp/na/eu)を問わず
+// 同一の結果が返ることを確認済み(worldnameで検索した際に全地域とも同一の結果)。
+// 一方、worldname未指定の検索はホストの地域に偏った結果になる(例: na向けドメインだと
+// NAワールドのキャラクターしか出てこない)ため、日本語UIのこのツールでは
+// jp.finalfantasyxiv.com を使い、日本のキャラクターがヒットしやすいようにする。
+const LODESTONE_HOST = "jp.finalfantasyxiv.com";
 
 const LODESTONE_UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
