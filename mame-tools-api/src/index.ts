@@ -31,9 +31,17 @@ function requireAdmin(request: Request, url: URL, env: Env): Response | null {
   return null;
 }
 
-async function handlePublicTools(env: Env): Promise<Response> {
+const SUPPORTED_LOCALES = new Set(["en", "ko"]);
+
+async function handlePublicTools(url: URL, env: Env): Promise<Response> {
+  const localeParam = url.searchParams.get("locale") ?? "";
+  const locale = SUPPORTED_LOCALES.has(localeParam) ? localeParam : null;
+
+  const nameCol = locale ? `COALESCE(NULLIF(name_${locale}, ''), name)` : "name";
+  const descCol = locale ? `COALESCE(NULLIF(description_${locale}, ''), description)` : "description";
+
   const { results } = await env.DB.prepare(
-    "SELECT slug, name, description, url, icon FROM tools WHERE published = 1 ORDER BY created_at ASC"
+    `SELECT slug, ${nameCol} as name, ${descCol} as description, url, icon FROM tools WHERE published = 1 ORDER BY created_at ASC`
   ).all<Pick<ToolRow, "slug" | "name" | "description" | "url" | "icon">>();
   return json({ tools: results });
 }
@@ -148,7 +156,7 @@ export default {
 
     try {
       if (url.pathname === "/tools" && request.method === "GET") {
-        return await handlePublicTools(env);
+        return await handlePublicTools(url, env);
       }
 
       if (url.pathname === "/admin/tools" && request.method === "GET") {

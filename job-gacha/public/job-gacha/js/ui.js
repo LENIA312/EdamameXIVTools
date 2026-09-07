@@ -6,6 +6,10 @@ function escapeHtml(str) {
     .replaceAll('"', "&quot;");
 }
 
+function onLocaleChange() {
+  renderApp();
+}
+
 function renderApp() {
   renderRoleIcons();
   renderCharacterList();
@@ -31,7 +35,7 @@ function renderRoleIcons() {
     icon.type = "button";
     icon.className = `role-icon ${SLOT_REQ_COLOR_CLASS[req]}${enabled ? "" : " role-icon-disabled"}`;
     icon.innerHTML = roleIconMarkup(req);
-    icon.title = SLOT_REQ_LABEL[req];
+    icon.title = slotReqLabel(req);
     icon.disabled = !enabled;
     icon.addEventListener("click", () => cycleRoleSlot(i));
     container.appendChild(icon);
@@ -40,9 +44,10 @@ function renderRoleIcons() {
 
 function roleIconMarkup(req) {
   const entry = SLOT_REQ_ICON[req];
-  if (!entry) return `<span class="role-icon-free">自由</span>`;
-  const corner = entry.corner ? `<span class="role-icon-corner">${entry.corner}</span>` : "";
-  return `<img src="${entry.icon}" alt="${SLOT_REQ_LABEL[req]}" class="role-icon-img">${corner}`;
+  if (!entry) return `<span class="role-icon-free">${t("role.free")}</span>`;
+  const cornerText = HEALER_CORNER_LABEL[req]?.[getLocale()];
+  const corner = cornerText ? `<span class="role-icon-corner">${cornerText}</span>` : "";
+  return `<img src="${entry.icon}" alt="${slotReqLabel(req)}" class="role-icon-img">${corner}`;
 }
 
 function renderCharacterList() {
@@ -63,7 +68,7 @@ function renderCharacterRow(index) {
   const avatar = document.createElement("button");
   avatar.type = "button";
   avatar.className = "avatar";
-  avatar.title = "キャラクター検索";
+  avatar.title = t("char.searchTitle");
   if (character.avatarUrl) {
     avatar.style.backgroundImage = `url("${character.avatarUrl}")`;
   }
@@ -74,7 +79,7 @@ function renderCharacterRow(index) {
   nameField.type = "button";
   nameField.className = "name-field";
   if (empty) {
-    nameField.innerHTML = `<span class="placeholder">＋ キャラクターを検索</span>`;
+    nameField.innerHTML = `<span class="placeholder">${t("char.placeholder")}</span>`;
   } else {
     nameField.innerHTML = `<span class="char-name">${escapeHtml(character.name)}</span><span class="char-world">${escapeHtml(character.world)} [${escapeHtml(character.dataCenter)}]</span>`;
   }
@@ -86,14 +91,14 @@ function renderCharacterRow(index) {
   const resultJobId = state.results[index];
   if (resultJobId) {
     const job = JOBS_BY_ID[resultJobId];
-    resultBadge.innerHTML = `<span class="job-name">${job.nameJa}</span><img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img">`;
+    resultBadge.innerHTML = `<span class="job-name">${escapeHtml(jobName(job))}</span><img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img">`;
   }
   row.appendChild(resultBadge);
 
   const settingsBtn = document.createElement("button");
   settingsBtn.type = "button";
   settingsBtn.className = "icon-btn";
-  settingsBtn.title = "抽選ジョブ設定";
+  settingsBtn.title = t("char.settingsTooltip");
   settingsBtn.textContent = "⚙";
   settingsBtn.disabled = empty;
   settingsBtn.addEventListener("click", () => openJobsModal(index));
@@ -103,7 +108,7 @@ function renderCharacterRow(index) {
     const clearBtn = document.createElement("button");
     clearBtn.type = "button";
     clearBtn.className = "icon-btn";
-    clearBtn.title = "クリア";
+    clearBtn.title = t("char.clearTooltip");
     clearBtn.textContent = "×";
     clearBtn.addEventListener("click", () => clearSlot(index));
     row.appendChild(clearBtn);
@@ -143,7 +148,7 @@ function worldSelectOptionsMarkup() {
     const dcOptions = group.dataCenters
       .map(
         (dc) =>
-          `<optgroup label="${escapeHtml(group.region)} / ${escapeHtml(dc.dc)}">` +
+          `<optgroup label="${escapeHtml(t(group.regionKey))} / ${escapeHtml(dc.dc)}">` +
           dc.worlds.map((w) => `<option value="${escapeHtml(w)}">${escapeHtml(w)}</option>`).join("") +
           `</optgroup>`
       )
@@ -155,15 +160,15 @@ function worldSelectOptionsMarkup() {
 function openSearchModal(slotIndex) {
   const wrap = document.createElement("div");
   wrap.innerHTML = `
-    <h2>キャラクター検索</h2>
+    <h2>${t("char.searchTitle")}</h2>
     <div class="search-form">
-      <input id="search-name" type="text" placeholder="キャラクター名">
+      <input id="search-name" type="text" placeholder="${t("char.namePlaceholder")}">
       <div class="search-form-row">
         <select id="search-world">
-          <option value="">すべてのワールドから検索(任意)</option>
+          <option value="">${t("char.worldAll")}</option>
           ${worldSelectOptionsMarkup()}
         </select>
-        <button id="search-submit" class="btn btn-primary">検索</button>
+        <button id="search-submit" class="btn btn-primary">${t("char.searchBtn")}</button>
       </div>
     </div>
     <p id="search-message" class="error" hidden></p>
@@ -183,19 +188,19 @@ function openSearchModal(slotIndex) {
     resultsEl.innerHTML = "";
 
     if (!name) {
-      message.textContent = "キャラクター名を入力してください";
+      message.textContent = t("char.nameRequired");
       message.hidden = false;
       return;
     }
 
     historyEl.hidden = true;
-    resultsEl.innerHTML = `<p class="loading">検索中...</p>`;
+    resultsEl.innerHTML = `<p class="loading">${t("char.searching")}</p>`;
     try {
       const results = await searchLodestoneCharacters(name, world);
       renderSearchResults(resultsEl, results, slotIndex, message);
     } catch (err) {
       resultsEl.innerHTML = "";
-      message.textContent = "検索に失敗しました。時間をおいて再度お試しください";
+      message.textContent = t("char.searchFailed");
       message.hidden = false;
     }
   };
@@ -215,7 +220,7 @@ function renderCharacterHistoryList(container, slotIndex, message) {
     container.innerHTML = "";
     return;
   }
-  container.innerHTML = `<p class="history-label">最近使用したキャラクター</p>`;
+  container.innerHTML = `<p class="history-label">${t("char.recentlyUsed")}</p>`;
   const list = document.createElement("div");
   list.className = "search-results";
   for (const stored of history) {
@@ -247,7 +252,7 @@ function renderCharacterHistoryList(container, slotIndex, message) {
 
 function renderSearchResults(container, results, slotIndex, message) {
   if (results.length === 0) {
-    container.innerHTML = `<p class="loading">該当するキャラクターが見つかりませんでした</p>`;
+    container.innerHTML = `<p class="loading">${t("char.noResults")}</p>`;
     return;
   }
 
@@ -282,20 +287,20 @@ async function selectSearchResult(result, slotIndex, message) {
     closeModal();
     renderApp();
   } catch (err) {
-    message.textContent = "キャラクター情報の取得に失敗しました";
+    message.textContent = t("char.fetchFailed");
     message.hidden = false;
   }
 }
 
 function openRosterHistoryModal() {
   const wrap = document.createElement("div");
-  wrap.innerHTML = `<h2>編成履歴</h2>`;
+  wrap.innerHTML = `<h2>${t("roster.title")}</h2>`;
 
   const history = loadRosterHistory();
   if (history.length === 0) {
     const empty = document.createElement("p");
     empty.className = "loading";
-    empty.textContent = "まだ履歴がありません";
+    empty.textContent = t("roster.empty");
     wrap.appendChild(empty);
   } else {
     const list = document.createElement("div");
@@ -308,7 +313,7 @@ function openRosterHistoryModal() {
       const date = new Date(entry.savedAt);
       item.innerHTML = `
         <span class="roster-history-names">${names}</span>
-        <span class="roster-history-date">${date.toLocaleString("ja-JP")}</span>
+        <span class="roster-history-date">${date.toLocaleString()}</span>
       `;
       item.addEventListener("click", () => {
         applyRosterHistoryEntry(entry);
@@ -323,7 +328,7 @@ function openRosterHistoryModal() {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn btn-primary";
-  closeBtn.textContent = "閉じる";
+  closeBtn.textContent = t("common.close");
   closeBtn.addEventListener("click", () => closeModal());
   wrap.appendChild(closeBtn);
 
@@ -333,7 +338,7 @@ function openRosterHistoryModal() {
 function openJobsModal(slotIndex) {
   const character = state.characters[slotIndex];
   const wrap = document.createElement("div");
-  wrap.innerHTML = `<h2>${escapeHtml(character.name)} の抽選対象ジョブ</h2>`;
+  wrap.innerHTML = `<h2>${t("jobs.modalTitle", { name: escapeHtml(character.name) })}</h2>`;
 
   const refreshChecks = () => {
     wrap.querySelectorAll(".job-check input").forEach((input) => {
@@ -344,8 +349,8 @@ function openJobsModal(slotIndex) {
   const bulkRow = document.createElement("div");
   bulkRow.className = "job-bulk-row";
   bulkRow.innerHTML = `
-    <button type="button" class="link-btn" data-action="select-all">全選択</button>
-    <button type="button" class="link-btn" data-action="deselect-all">全解除</button>
+    <button type="button" class="link-btn" data-action="select-all">${t("jobs.selectAll")}</button>
+    <button type="button" class="link-btn" data-action="deselect-all">${t("jobs.deselectAll")}</button>
   `;
   bulkRow.querySelector('[data-action="select-all"]').addEventListener("click", () => {
     character.excludedJobIds.clear();
@@ -366,10 +371,10 @@ function openJobsModal(slotIndex) {
     const header = document.createElement("div");
     header.className = "job-group-header";
     header.innerHTML = `
-      <span class="job-group-title">${escapeHtml(group.label)}</span>
+      <span class="job-group-title">${t(group.labelKey)}</span>
       <span class="job-group-actions">
-        <button type="button" class="link-btn" data-action="select">選択</button>
-        <button type="button" class="link-btn" data-action="deselect">解除</button>
+        <button type="button" class="link-btn" data-action="select">${t("jobs.groupSelect")}</button>
+        <button type="button" class="link-btn" data-action="deselect">${t("jobs.groupDeselect")}</button>
       </span>
     `;
     header.querySelector('[data-action="select"]').addEventListener("click", () => {
@@ -394,7 +399,7 @@ function openJobsModal(slotIndex) {
       label.innerHTML = `
         <input type="checkbox" data-job-id="${job.id}" ${checked ? "checked" : ""}>
         <img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img job-icon-img-small">
-        <span>${escapeHtml(job.nameJa)}</span>
+        <span>${escapeHtml(jobName(job))}</span>
         <span class="job-level">Lv.${level}</span>
       `;
       label.querySelector("input").addEventListener("change", () => {
@@ -410,7 +415,7 @@ function openJobsModal(slotIndex) {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn btn-primary";
-  closeBtn.textContent = "閉じる";
+  closeBtn.textContent = t("common.close");
   closeBtn.addEventListener("click", () => {
     closeModal();
     renderApp();

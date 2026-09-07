@@ -2,7 +2,7 @@
 // 出典: Lodestone ワールドステータスページ(物理データセンター全地域)
 const WORLD_GROUPS = [
   {
-    region: "日本",
+    regionKey: "region.jp",
     dataCenters: [
       { dc: "Elemental", worlds: ["Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Tonberry", "Typhon"] },
       { dc: "Gaia", worlds: ["Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat", "Ultima"] },
@@ -11,7 +11,7 @@ const WORLD_GROUPS = [
     ],
   },
   {
-    region: "北米",
+    regionKey: "region.na",
     dataCenters: [
       { dc: "Aether", worlds: ["Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas", "Siren"] },
       { dc: "Crystal", worlds: ["Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera"] },
@@ -20,14 +20,14 @@ const WORLD_GROUPS = [
     ],
   },
   {
-    region: "欧州",
+    regionKey: "region.eu",
     dataCenters: [
       { dc: "Chaos", worlds: ["Cerberus", "Louisoix", "Moogle", "Omega", "Phantom", "Ragnarok", "Sagittarius", "Spriggan"] },
       { dc: "Light", worlds: ["Alpha", "Lich", "Odin", "Phoenix", "Raiden", "Shiva", "Twintania", "Zodiark"] },
     ],
   },
   {
-    region: "オセアニア",
+    regionKey: "region.oce",
     dataCenters: [{ dc: "Materia", worlds: ["Bismarck", "Ravana", "Sephirot", "Sophia", "Zurvan"] }],
   },
 ];

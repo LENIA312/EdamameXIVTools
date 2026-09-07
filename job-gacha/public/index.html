@@ -23,17 +23,19 @@
 </head>
 <body>
 <div class="hub">
+  <div class="locale-switcher hub-locale-switcher"></div>
   <div class="hub-brand">🫛</div>
-  <h1 class="hub-title">まめツール</h1>
-  <p class="hub-subtitle">まめなツールをまとめたツール置き場</p>
+  <h1 class="hub-title" data-i18n="hub.title">まめツール</h1>
+  <p class="hub-subtitle" data-i18n="hub.subtitle">まめなツールをまとめたツール置き場</p>
 
   <div class="hub-tools" id="hub-tools">
-    <p class="loading">読み込み中...</p>
+    <p class="loading" data-i18n="hub.loading">読み込み中...</p>
   </div>
 
   <p class="hub-footer">by MigiteniEdamame</p>
 </div>
 
+<script src="js/i18n.js"></script>
 <script src="js/mame-api.js"></script>
 <script src="js/hub.js"></script>
 </body>

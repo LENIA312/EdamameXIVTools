@@ -82,7 +82,7 @@ async function buildResultCanvas(entries) {
   ctx.fillStyle = "#d63d73";
   ctx.font = "bold 34px sans-serif";
   ctx.textBaseline = "alphabetic";
-  ctx.fillText("🎲 ジョブガチャ 抽選結果", cardX + cardPaddingX, cardY + 56);
+  ctx.fillText(`🎲 ${t("share.headerTitle")}`, cardX + cardPaddingX, cardY + 56);
 
   ctx.strokeStyle = "#ffe3ee";
   ctx.lineWidth = 2;
@@ -120,7 +120,7 @@ async function buildResultCanvas(entries) {
 
     ctx.fillStyle = "#8a8a8a";
     ctx.font = "15px sans-serif";
-    ctx.fillText(entry.job.nameJa, textX, rowCenterY + 20);
+    ctx.fillText(jobName(entry.job), textX, rowCenterY + 20);
 
     if (i < entries.length - 1) {
       ctx.strokeStyle = "#fbeef4";
@@ -137,7 +137,7 @@ async function buildResultCanvas(entries) {
   ctx.fillStyle = "#c9c9c9";
   ctx.font = "13px sans-serif";
   ctx.textAlign = "right";
-  ctx.fillText("🫛 まめツール / edamame.tools.pisorium.com", cardX + cardW - cardPaddingX, footerY + 4);
+  ctx.fillText(`🫛 ${t("share.footerBrand")} / edamame.tools.pisorium.com`, cardX + cardW - cardPaddingX, footerY + 4);
   ctx.textAlign = "left";
 
   return canvas;

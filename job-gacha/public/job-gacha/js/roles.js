@@ -25,16 +25,26 @@ const SLOT_REQ_CYCLE = [
   SLOT_REQ.DPS_CASTER,
 ];
 
-const SLOT_REQ_LABEL = {
-  [SLOT_REQ.FREE]: "自由",
-  [SLOT_REQ.TANK]: "タンク",
-  [SLOT_REQ.HEALER]: "ヒーラー",
-  [SLOT_REQ.HEALER_PURE]: "純ヒーラー",
-  [SLOT_REQ.HEALER_BARRIER]: "バリアヒーラー",
-  [SLOT_REQ.DPS]: "DPS",
-  [SLOT_REQ.DPS_MELEE]: "近接DPS",
-  [SLOT_REQ.DPS_RANGED]: "遠隔物理DPS",
-  [SLOT_REQ.DPS_CASTER]: "遠隔魔法DPS",
+const SLOT_REQ_LABEL_KEY = {
+  [SLOT_REQ.FREE]: "role.free",
+  [SLOT_REQ.TANK]: "role.tank",
+  [SLOT_REQ.HEALER]: "role.healer",
+  [SLOT_REQ.HEALER_PURE]: "role.healerPure",
+  [SLOT_REQ.HEALER_BARRIER]: "role.healerBarrier",
+  [SLOT_REQ.DPS]: "role.dps",
+  [SLOT_REQ.DPS_MELEE]: "role.dpsMelee",
+  [SLOT_REQ.DPS_RANGED]: "role.dpsRanged",
+  [SLOT_REQ.DPS_CASTER]: "role.dpsCaster",
+};
+
+function slotReqLabel(req) {
+  return t(SLOT_REQ_LABEL_KEY[req]);
+}
+
+// 純/バリアヒーラーは公式アイコンが同一のため、隅に短いラベルを重ねて区別する
+const HEALER_CORNER_LABEL = {
+  [SLOT_REQ.HEALER_PURE]: { ja: "ピ", en: "P", ko: "순" },
+  [SLOT_REQ.HEALER_BARRIER]: { ja: "バ", en: "B", ko: "배" },
 };
 
 const SLOT_REQ_COLOR_CLASS = {
@@ -58,8 +68,8 @@ function roleIconUrl(key) {
 const SLOT_REQ_ICON = {
   [SLOT_REQ.TANK]: { icon: roleIconUrl("tank") },
   [SLOT_REQ.HEALER]: { icon: roleIconUrl("healer") },
-  [SLOT_REQ.HEALER_PURE]: { icon: roleIconUrl("healer"), corner: "ピ" },
-  [SLOT_REQ.HEALER_BARRIER]: { icon: roleIconUrl("healer"), corner: "バ" },
+  [SLOT_REQ.HEALER_PURE]: { icon: roleIconUrl("healer") },
+  [SLOT_REQ.HEALER_BARRIER]: { icon: roleIconUrl("healer") },
   [SLOT_REQ.DPS]: { icon: roleIconUrl("dps") },
   [SLOT_REQ.DPS_MELEE]: { icon: roleIconUrl("melee") },
   [SLOT_REQ.DPS_RANGED]: { icon: roleIconUrl("ranged") },

@@ -6,15 +6,22 @@ function escapeHtml(str) {
     .replaceAll('"', "&quot;");
 }
 
+function onLocaleChange() {
+  loadTools();
+}
+
 async function loadTools() {
   const container = document.getElementById("hub-tools");
+  container.innerHTML = `<p class="loading">${t("hub.loading")}</p>`;
   try {
-    const res = await fetch(`${MAME_TOOLS_API}/tools`);
+    const url = new URL(`${MAME_TOOLS_API}/tools`);
+    if (getLocale() !== "ja") url.searchParams.set("locale", getLocale());
+    const res = await fetch(url);
     if (!res.ok) throw new Error("failed");
     const data = await res.json();
 
     if (!data.tools || data.tools.length === 0) {
-      container.innerHTML = `<p class="loading">まだツールがありません</p>`;
+      container.innerHTML = `<p class="loading">${t("hub.noTools")}</p>`;
       return;
     }
 
@@ -32,8 +39,14 @@ async function loadTools() {
       )
       .join("");
   } catch (err) {
-    container.innerHTML = `<p class="loading">ツール一覧の読み込みに失敗しました</p>`;
+    container.innerHTML = `<p class="loading">${t("hub.loadError")}</p>`;
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadTools);
+function init() {
+  applyStaticI18n();
+  initLocaleSwitchers();
+  loadTools();
+}
+
+document.addEventListener("DOMContentLoaded", init);

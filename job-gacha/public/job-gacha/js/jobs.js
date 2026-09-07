@@ -14,44 +14,48 @@ const SUBTYPE = {
 };
 
 const JOBS = [
-  { id: "PLD", nameJa: "ナイト", role: ROLE.TANK, subtype: null },
-  { id: "WAR", nameJa: "戦士", role: ROLE.TANK, subtype: null },
-  { id: "DRK", nameJa: "暗黒騎士", role: ROLE.TANK, subtype: null },
-  { id: "GNB", nameJa: "ガンブレイカー", role: ROLE.TANK, subtype: null },
+  { id: "PLD", role: ROLE.TANK, subtype: null, name: { ja: "ナイト", en: "Paladin", ko: "나이트" } },
+  { id: "WAR", role: ROLE.TANK, subtype: null, name: { ja: "戦士", en: "Warrior", ko: "전사" } },
+  { id: "DRK", role: ROLE.TANK, subtype: null, name: { ja: "暗黒騎士", en: "Dark Knight", ko: "암흑기사" } },
+  { id: "GNB", role: ROLE.TANK, subtype: null, name: { ja: "ガンブレイカー", en: "Gunbreaker", ko: "건브레이커" } },
 
-  { id: "WHM", nameJa: "白魔道士", role: ROLE.HEALER, subtype: SUBTYPE.PURE },
-  { id: "AST", nameJa: "占星術師", role: ROLE.HEALER, subtype: SUBTYPE.PURE },
-  { id: "SCH", nameJa: "学者", role: ROLE.HEALER, subtype: SUBTYPE.BARRIER },
-  { id: "SGE", nameJa: "賢者", role: ROLE.HEALER, subtype: SUBTYPE.BARRIER },
+  { id: "WHM", role: ROLE.HEALER, subtype: SUBTYPE.PURE, name: { ja: "白魔道士", en: "White Mage", ko: "백마도사" } },
+  { id: "AST", role: ROLE.HEALER, subtype: SUBTYPE.PURE, name: { ja: "占星術師", en: "Astrologian", ko: "점성술사" } },
+  { id: "SCH", role: ROLE.HEALER, subtype: SUBTYPE.BARRIER, name: { ja: "学者", en: "Scholar", ko: "학자" } },
+  { id: "SGE", role: ROLE.HEALER, subtype: SUBTYPE.BARRIER, name: { ja: "賢者", en: "Sage", ko: "현자" } },
 
-  { id: "MNK", nameJa: "モンク", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
-  { id: "DRG", nameJa: "竜騎士", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
-  { id: "NIN", nameJa: "忍者", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
-  { id: "SAM", nameJa: "侍", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
-  { id: "RPR", nameJa: "リーパー", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
-  { id: "VPR", nameJa: "ヴァイパー", role: ROLE.DPS, subtype: SUBTYPE.MELEE },
+  { id: "MNK", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "モンク", en: "Monk", ko: "몽크" } },
+  { id: "DRG", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "竜騎士", en: "Dragoon", ko: "용기사" } },
+  { id: "NIN", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "忍者", en: "Ninja", ko: "닌자" } },
+  { id: "SAM", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "侍", en: "Samurai", ko: "사무라이" } },
+  { id: "RPR", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "リーパー", en: "Reaper", ko: "리퍼" } },
+  { id: "VPR", role: ROLE.DPS, subtype: SUBTYPE.MELEE, name: { ja: "ヴァイパー", en: "Viper", ko: "바이퍼" } },
 
-  { id: "BRD", nameJa: "吟遊詩人", role: ROLE.DPS, subtype: SUBTYPE.RANGED },
-  { id: "MCH", nameJa: "機工士", role: ROLE.DPS, subtype: SUBTYPE.RANGED },
-  { id: "DNC", nameJa: "踊り子", role: ROLE.DPS, subtype: SUBTYPE.RANGED },
+  { id: "BRD", role: ROLE.DPS, subtype: SUBTYPE.RANGED, name: { ja: "吟遊詩人", en: "Bard", ko: "음유시인" } },
+  { id: "MCH", role: ROLE.DPS, subtype: SUBTYPE.RANGED, name: { ja: "機工士", en: "Machinist", ko: "기공사" } },
+  { id: "DNC", role: ROLE.DPS, subtype: SUBTYPE.RANGED, name: { ja: "踊り子", en: "Dancer", ko: "무도가" } },
 
-  { id: "BLM", nameJa: "黒魔道士", role: ROLE.DPS, subtype: SUBTYPE.CASTER },
-  { id: "SMN", nameJa: "召喚士", role: ROLE.DPS, subtype: SUBTYPE.CASTER },
-  { id: "RDM", nameJa: "赤魔道士", role: ROLE.DPS, subtype: SUBTYPE.CASTER },
-  { id: "PCT", nameJa: "ピクトマンサー", role: ROLE.DPS, subtype: SUBTYPE.CASTER },
+  { id: "BLM", role: ROLE.DPS, subtype: SUBTYPE.CASTER, name: { ja: "黒魔道士", en: "Black Mage", ko: "흑마도사" } },
+  { id: "SMN", role: ROLE.DPS, subtype: SUBTYPE.CASTER, name: { ja: "召喚士", en: "Summoner", ko: "소환사" } },
+  { id: "RDM", role: ROLE.DPS, subtype: SUBTYPE.CASTER, name: { ja: "赤魔道士", en: "Red Mage", ko: "적마도사" } },
+  { id: "PCT", role: ROLE.DPS, subtype: SUBTYPE.CASTER, name: { ja: "ピクトマンサー", en: "Pictomancer", ko: "픽토맨서" } },
 ];
 
 const JOBS_BY_ID = Object.fromEntries(JOBS.map((job) => [job.id, job]));
 
-const JOB_GROUPS = [
-  { label: "タンク", jobs: JOBS.filter((j) => j.role === ROLE.TANK) },
-  { label: "純ヒーラー", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.PURE) },
-  { label: "バリアヒーラー", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.BARRIER) },
-  { label: "近接DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.MELEE) },
-  { label: "遠隔物理DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.RANGED) },
-  { label: "遠隔魔法DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.CASTER) },
-];
-
 function jobIconUrl(jobId) {
   return `assets/icons/jobs/${jobId}.png`;
 }
+
+function jobName(job) {
+  return job.name[getLocale()] || job.name.ja;
+}
+
+const JOB_GROUPS = [
+  { labelKey: "jobGroup.tank", jobs: JOBS.filter((j) => j.role === ROLE.TANK) },
+  { labelKey: "jobGroup.healerPure", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.PURE) },
+  { labelKey: "jobGroup.healerBarrier", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.BARRIER) },
+  { labelKey: "jobGroup.dpsMelee", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.MELEE) },
+  { labelKey: "jobGroup.dpsRanged", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.RANGED) },
+  { labelKey: "jobGroup.dpsCaster", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.CASTER) },
+];

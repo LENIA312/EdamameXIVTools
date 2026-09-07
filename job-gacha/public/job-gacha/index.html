@@ -25,38 +25,41 @@
 <div class="app">
   <header class="panel header">
     <div class="level-field">
-      <label for="level-threshold">基準レベル</label>
+      <label for="level-threshold" data-i18n="level.label">基準レベル</label>
       <input id="level-threshold" type="number" min="1" max="100" value="100">
       <div class="level-quick-row">
         <button type="button" class="btn-mini" data-level="1">Lv1</button>
         <button type="button" class="btn-mini" data-level="100">Lv100</button>
       </div>
-      <button id="optimal-level-btn" type="button" class="btn-mini">全員の最適レベル適用</button>
+      <button id="optimal-level-btn" type="button" class="btn-mini" data-i18n="level.optimalBtn">全員の最適レベル適用</button>
     </div>
 
     <div class="header-center">
-      <a href="../" class="hub-link">← まめツール</a>
-      <h1 class="title">ジョブガチャ</h1>
+      <a href="../" class="hub-link" data-i18n="app.hubLink">← まめツール</a>
+      <h1 class="title" data-i18n="app.title">ジョブガチャ</h1>
       <div class="role-icons" id="role-icons"></div>
     </div>
 
-    <button id="role-mode-toggle" class="btn btn-outline">構成変更</button>
+    <div class="header-right">
+      <button id="role-mode-toggle" class="btn btn-outline" data-i18n="role.changeBtn">構成変更</button>
+      <div class="locale-switcher"></div>
+    </div>
   </header>
 
   <div class="toolbar-row">
-    <button id="reset-characters-btn" type="button" class="btn btn-outline btn-small">キャラクターを全リセット</button>
-    <button id="roster-history-btn" type="button" class="btn btn-outline btn-small">編成履歴から選ぶ</button>
+    <button id="reset-characters-btn" type="button" class="btn btn-outline btn-small" data-i18n="toolbar.resetAll">キャラクターを全リセット</button>
+    <button id="roster-history-btn" type="button" class="btn btn-outline btn-small" data-i18n="toolbar.rosterHistory">編成履歴から選ぶ</button>
   </div>
 
   <main class="panel character-list" id="character-list"></main>
 
   <div class="options-row">
-    <label class="checkbox"><input type="checkbox" id="no-duplicate">ジョブ重複なし</label>
-    <label class="checkbox"><input type="checkbox" id="exclude-unreleased" checked>未開放ジョブを除外</label>
+    <label class="checkbox"><input type="checkbox" id="no-duplicate"><span data-i18n="options.noDuplicate">ジョブ重複なし</span></label>
+    <label class="checkbox"><input type="checkbox" id="exclude-unreleased" checked><span data-i18n="options.excludeUnreleased">未開放ジョブを除外</span></label>
   </div>
 
-  <button id="draw-button" class="btn btn-primary btn-large">抽選開始</button>
-  <button id="share-button" class="btn btn-outline btn-large" hidden>結果をシェア</button>
+  <button id="draw-button" class="btn btn-primary btn-large" data-i18n="draw.button">抽選開始</button>
+  <button id="share-button" class="btn btn-outline btn-large" hidden data-i18n="draw.shareButton">結果をシェア</button>
   <p id="draw-error" class="error" hidden></p>
   <p id="share-message" class="notice" hidden></p>
 
@@ -71,6 +74,7 @@
   <div id="modal" class="modal"></div>
 </div>
 
+<script src="../js/i18n.js"></script>
 <script src="js/jobs.js"></script>
 <script src="js/roles.js"></script>
 <script src="js/worlds.js"></script>

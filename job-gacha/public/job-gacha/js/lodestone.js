@@ -7,13 +7,13 @@ async function searchLodestoneCharacters(name, world) {
   if (world) url.searchParams.set("world", world);
 
   const res = await fetch(url);
-  if (!res.ok) throw new Error("キャラクター検索に失敗しました");
+  if (!res.ok) throw new Error(t("char.searchFailed"));
   const data = await res.json();
   return data.results;
 }
 
 async function fetchLodestoneCharacter(id) {
   const res = await fetch(`${LODESTONE_API_BASE}/character/${id}`);
-  if (!res.ok) throw new Error("キャラクター情報の取得に失敗しました");
+  if (!res.ok) throw new Error(t("char.fetchFailed"));
   return res.json();
 }

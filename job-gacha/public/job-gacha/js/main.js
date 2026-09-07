@@ -46,7 +46,7 @@ function assignCharacterToSlot(index, detail) {
     (c, i) => i !== index && c.lodestoneId === lodestoneId
   );
   if (alreadyUsed) {
-    return { success: false, error: "同じキャラクターは複数選択できません" };
+    return { success: false, error: t("draw.errorDuplicateCharacter") };
   }
 
   state.characters[index] = {
@@ -138,7 +138,7 @@ function runDraw() {
   document.getElementById("share-message").hidden = true;
 
   if (activeIndexes.length === 0) {
-    errorEl.textContent = "キャラクターを1人以上選択してください";
+    errorEl.textContent = t("draw.errorNoCharacters");
     errorEl.hidden = false;
     return;
   }
@@ -157,9 +157,9 @@ function runDraw() {
   if (!result.success) {
     if (result.reason === "no-eligible-job") {
       const name = characters[result.slotIndex].name;
-      errorEl.textContent = `${name} の条件(基準レベル・抽選対象設定)を満たすジョブがありません`;
+      errorEl.textContent = t("draw.errorInsufficientLevel", { name });
     } else {
-      errorEl.textContent = "条件を満たす組み合わせが見つかりませんでした";
+      errorEl.textContent = t("draw.errorNoCombination");
     }
     errorEl.hidden = false;
     invalidateResults();
@@ -179,7 +179,7 @@ function runDraw() {
     activeIndexes.map((slotIndex) => {
       const job = JOBS_BY_ID[state.results[slotIndex]];
       const c = state.characters[slotIndex];
-      return { name: c.name, world: c.world, jobId: job.id, jobName: job.nameJa };
+      return { name: c.name, world: c.world, jobId: job.id, jobName: job.name.ja };
     })
   );
 }
@@ -198,11 +198,11 @@ async function handleShareClick() {
   try {
     const outcome = await shareDrawResult(entries);
     if (outcome.downloaded) {
-      messageEl.textContent = "画像を保存しました。SNS等に添付してシェアしてください";
+      messageEl.textContent = t("share.saved");
       messageEl.hidden = false;
     }
   } catch (err) {
-    messageEl.textContent = "画像の生成に失敗しました";
+    messageEl.textContent = t("share.failed");
     messageEl.hidden = false;
   }
 }
@@ -240,6 +240,8 @@ function init() {
   document.getElementById("reset-characters-btn").addEventListener("click", resetAllCharacters);
   document.getElementById("share-button").addEventListener("click", handleShareClick);
 
+  applyStaticI18n();
+  initLocaleSwitchers();
   renderApp();
 }
 

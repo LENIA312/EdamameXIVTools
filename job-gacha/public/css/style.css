@@ -107,3 +107,27 @@ body {
 }
 
 .loading { color: var(--muted); font-size: 14px; }
+
+.hub-locale-switcher { align-self: flex-end; margin-bottom: 8px; }
+
+.locale-switcher {
+  display: flex;
+  gap: 4px;
+}
+
+.locale-btn {
+  border: 1px solid var(--pink-light);
+  background: #fff;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.locale-btn:hover { border-color: var(--pink); }
+.locale-btn-active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: #fff;
+}
