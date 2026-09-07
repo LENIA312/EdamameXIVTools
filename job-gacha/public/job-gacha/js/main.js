@@ -243,6 +243,7 @@ function init() {
   applyStaticI18n();
   initLocaleSwitchers();
   renderApp();
+  recordPageview("job-gacha");
 }
 
 document.addEventListener("DOMContentLoaded", init);

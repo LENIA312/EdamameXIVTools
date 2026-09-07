@@ -51,9 +51,31 @@ async function handleAdminTools(request: Request, url: URL, env: Env): Promise<R
   if (unauthorized) return unauthorized;
 
   const { results } = await env.DB.prepare(
-    "SELECT slug, name, description, url, icon, published, created_at FROM tools ORDER BY created_at ASC"
-  ).all<ToolRow>();
+    `SELECT t.slug, t.name, t.description, t.url, t.icon, t.published, t.created_at,
+            COALESCE(p.count, 0) as pageviews
+     FROM tools t LEFT JOIN tool_pageviews p ON p.slug = t.slug
+     ORDER BY t.created_at ASC`
+  ).all<ToolRow & { pageviews: number }>();
   return json({ tools: results });
+}
+
+async function handlePageview(request: Request, env: Env): Promise<Response> {
+  const body = await request.json<{ slug?: string }>().catch(() => null);
+  const slug = body?.slug;
+  if (!slug || typeof slug !== "string") {
+    return json({ error: "slug is required" }, 400);
+  }
+
+  const tool = await env.DB.prepare("SELECT slug FROM tools WHERE slug = ?").bind(slug).first();
+  if (!tool) return json({ error: "unknown tool" }, 404);
+
+  await env.DB.prepare(
+    "INSERT INTO tool_pageviews (slug, count) VALUES (?, 1) ON CONFLICT(slug) DO UPDATE SET count = count + 1"
+  )
+    .bind(slug)
+    .run();
+
+  return json({ ok: true });
 }
 
 async function handleUpdateTool(request: Request, url: URL, env: Env, slug: string): Promise<Response> {
@@ -174,6 +196,10 @@ export default {
 
       if (url.pathname === "/admin/job-gacha/draws" && request.method === "GET") {
         return await handleAdminDraws(request, url, env);
+      }
+
+      if (url.pathname === "/pageview" && request.method === "POST") {
+        return await handlePageview(request, env);
       }
 
       return json({ error: "not found" }, 404);

@@ -1,0 +1,4 @@
+CREATE TABLE tool_pageviews (
+  slug TEXT PRIMARY KEY,
+  count INTEGER NOT NULL DEFAULT 0
+);

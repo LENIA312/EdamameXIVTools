@@ -62,6 +62,7 @@ function renderToolsList(tools, key) {
             <span class="admin-tool-name">${escapeHtml(tool.name)}</span>
             <span class="admin-tool-slug">${escapeHtml(tool.slug)}</span>
           </span>
+          <span class="admin-tool-views">👁 ${tool.pageviews ?? 0}</span>
           <label class="checkbox admin-tool-publish">
             <input type="checkbox" data-slug="${escapeHtml(tool.slug)}" ${tool.published ? "checked" : ""}>
             公開
@@ -163,6 +164,7 @@ async function showAdminContent(key) {
     document.getElementById("login-panel").hidden = true;
     document.getElementById("admin-content").hidden = false;
     saveAdminKey(key);
+    setAdminCookie();
   } catch (err) {
     clearAdminKey();
     errorEl.textContent = "Admin Keyが正しくありません";
