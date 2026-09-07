@@ -1,4 +1,9 @@
 // 抽選(制約充足)アルゴリズム
+//
+// ロール構成は「どのキャラクターがどの役割を担うか」を固定しない、役割要求の集合として扱う。
+// 各役割スロットについて、まだ役割が決まっていない全キャラクター×そのキャラクターの
+// 抽選対象ジョブを試し、成立する組み合わせがあれば必ずそれを採用する。
+// どの組み合わせでも成立しない場合にのみエラーとする。
 
 function shuffled(array) {
   const copy = array.slice();
@@ -19,36 +24,48 @@ function computeEligibleJobs(character, settings) {
   }).map((job) => job.id);
 }
 
-// characters: [{ jobLevels, excludedJobIds }], roleTemplate: SLOT_REQ[] (characters と同じ長さ)
+// characters: [{ jobLevels, excludedJobIds }], roleTemplate: SLOT_REQ[] (characters と同じ長さ、役割要求の集合として扱う)
 function drawAssignment(characters, roleTemplate, settings) {
   const n = characters.length;
 
-  const eligiblePerSlot = characters.map((character, i) => {
-    const base = computeEligibleJobs(character, settings);
-    const matched = base.filter((jobId) => jobMatchesRequirement(JOBS_BY_ID[jobId], roleTemplate[i]));
-    // 指定のロールを満たすジョブがない場合、そのキャラクターだけロール指定を諦めて自由枠として扱う
-    return shuffled(matched.length > 0 ? matched : base);
-  });
+  const eligiblePerCharacter = characters.map((character) => computeEligibleJobs(character, settings));
 
-  const emptySlot = eligiblePerSlot.findIndex((jobs) => jobs.length === 0);
-  if (emptySlot !== -1) {
-    return { success: false, reason: "no-eligible-job", slotIndex: emptySlot };
+  const emptyCharIndex = eligiblePerCharacter.findIndex((jobs) => jobs.length === 0);
+  if (emptyCharIndex !== -1) {
+    return { success: false, reason: "no-eligible-job", slotIndex: emptyCharIndex };
   }
 
-  const order = shuffled([...Array(n).keys()]);
-  const assignment = new Array(n).fill(null);
+  const slotOrder = shuffled([...Array(n).keys()]);
+  const charOrder = shuffled([...Array(n).keys()]);
+
+  const assignment = new Array(n).fill(null); // assignment[characterIndex] = jobId
+  const usedCharacters = new Array(n).fill(false);
   const usedJobs = new Set();
 
-  function backtrack(pos) {
-    if (pos === n) return true;
-    const slot = order[pos];
-    for (const jobId of eligiblePerSlot[slot]) {
-      if (settings.noDuplicateJobs && usedJobs.has(jobId)) continue;
-      assignment[slot] = jobId;
-      usedJobs.add(jobId);
-      if (backtrack(pos + 1)) return true;
-      usedJobs.delete(jobId);
-      assignment[slot] = null;
+  function backtrack(slotPos) {
+    if (slotPos === n) return true;
+    const requirement = roleTemplate[slotOrder[slotPos]];
+
+    for (const charIndex of charOrder) {
+      if (usedCharacters[charIndex]) continue;
+
+      const candidateJobs = shuffled(
+        eligiblePerCharacter[charIndex].filter((jobId) => jobMatchesRequirement(JOBS_BY_ID[jobId], requirement))
+      );
+
+      for (const jobId of candidateJobs) {
+        if (settings.noDuplicateJobs && usedJobs.has(jobId)) continue;
+
+        usedCharacters[charIndex] = true;
+        usedJobs.add(jobId);
+        assignment[charIndex] = jobId;
+
+        if (backtrack(slotPos + 1)) return true;
+
+        usedCharacters[charIndex] = false;
+        usedJobs.delete(jobId);
+        assignment[charIndex] = null;
+      }
     }
     return false;
   }
