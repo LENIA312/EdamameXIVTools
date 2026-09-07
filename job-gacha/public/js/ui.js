@@ -160,7 +160,7 @@ function openSearchModal(slotIndex) {
       <input id="search-name" type="text" placeholder="キャラクター名">
       <div class="search-form-row">
         <select id="search-world">
-          <option value="">ワールドを選択</option>
+          <option value="">すべてのワールドから検索(任意)</option>
           ${worldSelectOptionsMarkup()}
         </select>
         <button id="search-submit" class="btn btn-primary">検索</button>
