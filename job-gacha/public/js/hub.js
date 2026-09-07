@@ -1,5 +1,3 @@
-const MAME_TOOLS_API = "https://mame-tools-api.pisorium.workers.dev";
-
 function escapeHtml(str) {
   return String(str)
     .replaceAll("&", "&amp;")
