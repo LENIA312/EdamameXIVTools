@@ -102,7 +102,7 @@ function renderToolsList(tools, key) {
 
 async function renderJobGachaAdminSection(container, key) {
   container.innerHTML = `
-    <h2 class="admin-section-title">🎲 ジョブガチャ</h2>
+    <h2 class="admin-section-title">🎲 ジョブルーレット</h2>
     <p id="jg-draw-count" class="admin-stat">総抽選回数: -</p>
     <button id="jg-reload-draws-btn" type="button" class="btn-mini">再読み込み</button>
     <div id="jg-draws-list" class="admin-draws-list"></div>

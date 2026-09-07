@@ -87,7 +87,7 @@ const I18N = {
     "hub.noTools": "まだツールがありません",
     "hub.loadError": "ツール一覧の読み込みに失敗しました",
 
-    "app.title": "ジョブガチャ",
+    "app.title": "ジョブルーレット",
     "app.hubLink": "← まめツール",
     "level.label": "基準レベル",
     "level.optimalBtn": "全員の最適レベル適用",
@@ -146,7 +146,7 @@ const I18N = {
     "role.dpsRanged": "遠隔物理DPS",
     "role.dpsCaster": "遠隔魔法DPS",
 
-    "share.headerTitle": "ジョブガチャ 抽選結果",
+    "share.headerTitle": "ジョブルーレット 抽選結果",
     "share.footerBrand": "まめツール",
 
     "region.jp": "日本",
@@ -161,7 +161,7 @@ const I18N = {
     "hub.noTools": "No tools yet",
     "hub.loadError": "Failed to load the tool list",
 
-    "app.title": "Job Gacha",
+    "app.title": "Job Roulette",
     "app.hubLink": "← Mame Tools",
     "level.label": "Level Threshold",
     "level.optimalBtn": "Apply Best Level for All",
@@ -220,7 +220,7 @@ const I18N = {
     "role.dpsRanged": "Physical Ranged DPS",
     "role.dpsCaster": "Magical Ranged DPS",
 
-    "share.headerTitle": "Job Gacha Result",
+    "share.headerTitle": "Job Roulette Result",
     "share.footerBrand": "Mame Tools",
 
     "region.jp": "Japan",
@@ -235,7 +235,7 @@ const I18N = {
     "hub.noTools": "아직 도구가 없습니다",
     "hub.loadError": "도구 목록을 불러오지 못했습니다",
 
-    "app.title": "잡 가챠",
+    "app.title": "잡 룰렛",
     "app.hubLink": "← 마메 툴즈",
     "level.label": "기준 레벨",
     "level.optimalBtn": "전원 최적 레벨 적용",
@@ -294,7 +294,7 @@ const I18N = {
     "role.dpsRanged": "물리 원거리 DPS",
     "role.dpsCaster": "마법 원거리 DPS",
 
-    "share.headerTitle": "잡 가챠 결과",
+    "share.headerTitle": "잡 룰렛 결과",
     "share.footerBrand": "마메 툴즈",
 
     "region.jp": "일본",
