@@ -198,13 +198,20 @@ async function handleShareClick() {
   }
 }
 
+function setLevelThreshold(value) {
+  state.levelThreshold = Number.isFinite(value) ? Math.min(Math.max(value, 1), 100) : 1;
+  document.getElementById("level-threshold").value = state.levelThreshold;
+  invalidateResults();
+  renderApp();
+}
+
 function init() {
   document.getElementById("level-threshold").addEventListener("change", (e) => {
-    const value = Number.parseInt(e.target.value, 10);
-    state.levelThreshold = Number.isFinite(value) ? Math.min(Math.max(value, 1), 100) : 1;
-    e.target.value = state.levelThreshold;
-    invalidateResults();
-    renderApp();
+    setLevelThreshold(Number.parseInt(e.target.value, 10));
+  });
+
+  document.querySelectorAll(".level-quick-row [data-level]").forEach((btn) => {
+    btn.addEventListener("click", () => setLevelThreshold(Number.parseInt(btn.dataset.level, 10)));
   });
 
   document.getElementById("no-duplicate").addEventListener("change", (e) => {

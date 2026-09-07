@@ -40,7 +40,7 @@ function renderRoleIcons() {
 
 function roleIconMarkup(req) {
   const entry = SLOT_REQ_ICON[req];
-  if (!entry) return `<span class="role-icon-free">・</span>`;
+  if (!entry) return `<span class="role-icon-free">自由</span>`;
   const corner = entry.corner ? `<span class="role-icon-corner">${entry.corner}</span>` : "";
   return `<img src="${entry.icon}" alt="${SLOT_REQ_LABEL[req]}" class="role-icon-img">${corner}`;
 }

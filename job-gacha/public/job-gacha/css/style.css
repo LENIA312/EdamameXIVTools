@@ -77,6 +77,15 @@ body {
 }
 .btn-mini:hover { color: var(--pink); }
 
+.level-quick-row { display: flex; gap: 8px; }
+.level-quick-row .btn-mini {
+  border: 1px solid var(--pink-light);
+  border-radius: 999px;
+  padding: 2px 8px;
+  text-decoration: none;
+}
+.level-quick-row .btn-mini:hover { border-color: var(--pink); background: var(--pink-light); }
+
 .hub-link {
   font-size: 11px;
   color: var(--muted);
@@ -151,9 +160,17 @@ body {
 }
 
 .role-icon-free {
-  color: var(--muted);
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 2px dashed var(--pink-light);
+  color: var(--pink-dark);
+  font-size: 10px;
   font-weight: 700;
+  line-height: 1;
 }
 
 .role-icon-corner {
@@ -436,6 +453,7 @@ body {
   .role-icons { gap: 3px; }
   .role-icon { width: 28px; height: 28px; }
   .role-icon-img { width: 20px; height: 20px; }
+  .role-icon-free { width: 20px; height: 20px; font-size: 8px; }
   .role-icon-corner { font-size: 7px; padding: 1px 2px; }
   .char-row { padding: 8px 10px; gap: 8px; }
   .result-badge { width: 84px; }
