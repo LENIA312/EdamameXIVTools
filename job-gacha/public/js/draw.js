@@ -26,14 +26,15 @@ function drawAssignment(characters, roleTemplate, settings) {
   const eligiblePerSlot = characters.map((character, i) => {
     const base = computeEligibleJobs(character, settings);
     const matched = base.filter((jobId) => jobMatchesRequirement(JOBS_BY_ID[jobId], roleTemplate[i]));
-    return shuffled(matched);
+    // 指定のロールを満たすジョブがない場合、そのキャラクターだけロール指定を諦めて自由枠として扱う
+    return shuffled(matched.length > 0 ? matched : base);
   });
 
   const emptySlot = eligiblePerSlot.findIndex((jobs) => jobs.length === 0);
   if (emptySlot !== -1) {
     return {
       success: false,
-      error: `${emptySlot + 1}人目の条件(レベル制限・ロール構成・抽選対象設定)を満たすジョブがありません`,
+      error: `${emptySlot + 1}人目の条件(レベル制限・抽選対象設定)を満たすジョブがありません`,
     };
   }
 

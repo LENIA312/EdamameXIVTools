@@ -45,17 +45,17 @@ function roleReqShortLabel(req) {
     case SLOT_REQ.HEALER:
       return "H";
     case SLOT_REQ.HEALER_PURE:
-      return "H純";
+      return "Hピ";
     case SLOT_REQ.HEALER_BARRIER:
-      return "H盾";
+      return "Hバ";
     case SLOT_REQ.DPS:
       return "D";
     case SLOT_REQ.DPS_MELEE:
       return "D近";
     case SLOT_REQ.DPS_RANGED:
-      return "D物";
+      return "Dレ";
     case SLOT_REQ.DPS_CASTER:
-      return "D魔";
+      return "D遠";
     default:
       return "?";
   }
