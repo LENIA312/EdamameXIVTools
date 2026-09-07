@@ -1,0 +1,303 @@
+:root {
+  --bg: #fff;
+  --pink: #ff4f8b;
+  --pink-light: #ffe3ee;
+  --pink-dark: #d63d73;
+  --text: #2b2b2b;
+  --muted: #8a8a8a;
+  --tank: #3d7fd1;
+  --healer: #45b26b;
+  --dps: #e14c5a;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  margin: 0;
+  padding: 24px 16px 48px;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: #fff;
+  border: 2px solid var(--pink-light);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px rgba(255, 79, 139, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 3px solid var(--pink);
+}
+
+.level-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.level-field input {
+  width: 64px;
+  text-align: center;
+  border: 2px solid var(--pink-light);
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--pink-dark);
+  font-weight: 800;
+}
+
+.role-icons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.role-icon {
+  border: none;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.role-icon:hover:not(:disabled) { transform: scale(1.08); }
+.role-icon-disabled { opacity: 0.25; cursor: default; }
+
+.role-free { background: #c9c9c9; }
+.role-tank { background: var(--tank); }
+.role-healer { background: var(--healer); }
+.role-dps { background: var(--dps); }
+
+.btn {
+  border-radius: 999px;
+  border: none;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-outline {
+  background: #fff;
+  border: 2px solid var(--pink);
+  color: var(--pink-dark);
+}
+.btn-outline:hover { background: var(--pink-light); }
+
+.btn-primary { background: var(--pink); color: #fff; }
+.btn-primary:hover { background: var(--pink-dark); }
+
+.btn-large {
+  font-size: 18px;
+  padding: 16px;
+  letter-spacing: 4px;
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.character-list {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 8px;
+}
+
+.char-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 2px solid var(--pink-light);
+  border-radius: 12px;
+  background: #fffafc;
+}
+.char-row-empty { background: #fff; border-style: dashed; }
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--pink);
+  background: var(--pink-light) center/cover no-repeat;
+  flex: none;
+  cursor: pointer;
+  padding: 0;
+}
+.avatar-small { width: 32px; height: 32px; }
+
+.name-field {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.name-field .placeholder { color: var(--muted); }
+.char-name { font-weight: 700; font-size: 15px; }
+.char-world { font-size: 12px; color: var(--muted); }
+
+.result-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+}
+.job-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+}
+.job-name { font-size: 12px; color: var(--muted); }
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--pink-light);
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  flex: none;
+}
+.icon-btn:hover:not(:disabled) { background: var(--pink-light); }
+.icon-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.options-row {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  padding: 4px 0;
+  flex-wrap: wrap;
+}
+.checkbox { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text); }
+
+.error { color: #d0304a; text-align: center; font-weight: 700; }
+
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 8px 0 24px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(60, 20, 35, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-backdrop[hidden] { display: none; }
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 3px solid var(--pink);
+}
+.modal h2 { margin-top: 0; color: var(--pink-dark); font-size: 18px; }
+
+.search-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.search-form input, .search-form select {
+  border: 2px solid var(--pink-light);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+.search-form input[type="text"] { flex: 1; min-width: 120px; }
+
+.search-results { display: flex; flex-direction: column; gap: 6px; }
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 2px solid var(--pink-light);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+.search-result-item:hover { background: var(--pink-light); }
+.result-info { display: flex; flex-direction: column; }
+.loading { color: var(--muted); text-align: center; }
+
+.job-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.job-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  border-left: 6px solid transparent;
+  background: #fafafa;
+}
+.job-check.role-tank { border-left-color: var(--tank); }
+.job-check.role-healer { border-left-color: var(--healer); }
+.job-check.role-dps { border-left-color: var(--dps); }
+.job-level { margin-left: auto; color: var(--muted); font-size: 12px; }
+
+@media (max-width: 560px) {
+  .header { flex-direction: column; }
+  .char-row { flex-wrap: wrap; }
+  .job-grid { grid-template-columns: 1fr; }
+}
