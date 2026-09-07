@@ -40,16 +40,17 @@ function invalidateResults() {
   state.results = new Array(MAX_SLOTS).fill(null);
 }
 
-function assignCharacterToSlot(index, detail, region) {
+function assignCharacterToSlot(index, detail) {
+  const lodestoneId = detail.lodestoneId ?? detail.id;
   const alreadyUsed = state.characters.some(
-    (c, i) => i !== index && c.lodestoneId === detail.id
+    (c, i) => i !== index && c.lodestoneId === lodestoneId
   );
   if (alreadyUsed) {
     return { success: false, error: "同じキャラクターは複数選択できません" };
   }
 
   state.characters[index] = {
-    lodestoneId: detail.id,
+    lodestoneId,
     name: detail.name,
     world: detail.world,
     dataCenter: detail.dataCenter,
@@ -64,6 +65,31 @@ function assignCharacterToSlot(index, detail, region) {
 function clearSlot(index) {
   state.characters[index] = createEmptyCharacter();
   delete state.roleOverrides[index];
+  invalidateResults();
+  renderApp();
+}
+
+function applyRosterHistoryEntry(entry) {
+  state.characters = Array.from({ length: MAX_SLOTS }, (_, i) => {
+    const stored = entry.characters[i];
+    return stored ? fromStorableCharacter(stored) : createEmptyCharacter();
+  });
+  state.roleOverrides = {};
+  invalidateResults();
+}
+
+function applyOptimalLevel() {
+  const active = state.characters.filter((c) => c.name);
+  if (active.length === 0) return;
+
+  const maxLevels = active.map((c) => {
+    const levels = Object.values(c.jobLevels || {});
+    return levels.length > 0 ? Math.max(...levels) : 0;
+  });
+  const optimal = Math.max(1, Math.min(...maxLevels));
+
+  state.levelThreshold = optimal;
+  document.getElementById("level-threshold").value = optimal;
   invalidateResults();
   renderApp();
 }
@@ -99,13 +125,18 @@ function runDraw() {
     .filter((i) => i !== -1);
 
   const errorEl = document.getElementById("draw-error");
+  const shareBtn = document.getElementById("share-button");
   errorEl.hidden = true;
+  shareBtn.hidden = true;
+  document.getElementById("share-message").hidden = true;
 
   if (activeIndexes.length === 0) {
     errorEl.textContent = "キャラクターを1人以上選択してください";
     errorEl.hidden = false;
     return;
   }
+
+  recordRosterHistory(activeIndexes.map((i) => state.characters[i]));
 
   const characters = activeIndexes.map((i) => state.characters[i]);
   const roleTemplate = activeIndexes.map((i) => currentRoleTemplate()[i]);
@@ -117,7 +148,12 @@ function runDraw() {
 
   const result = drawAssignment(characters, roleTemplate, settings);
   if (!result.success) {
-    errorEl.textContent = result.error;
+    if (result.reason === "no-eligible-job") {
+      const name = characters[result.slotIndex].name;
+      errorEl.textContent = `${name} の条件(基準レベル・抽選対象設定)を満たすジョブがありません`;
+    } else {
+      errorEl.textContent = "条件を満たす組み合わせが見つかりませんでした";
+    }
     errorEl.hidden = false;
     return;
   }
@@ -126,7 +162,31 @@ function runDraw() {
   activeIndexes.forEach((slotIndex, pos) => {
     state.results[slotIndex] = result.assignment[pos];
   });
+  shareBtn.hidden = false;
   renderApp();
+}
+
+async function handleShareClick() {
+  const messageEl = document.getElementById("share-message");
+  messageEl.hidden = true;
+
+  const entries = state.characters
+    .map((character, i) => ({ character, jobId: state.results[i] }))
+    .filter((e) => e.jobId)
+    .map((e) => ({ character: e.character, job: JOBS_BY_ID[e.jobId] }));
+
+  if (entries.length === 0) return;
+
+  try {
+    const outcome = await shareDrawResult(entries);
+    if (outcome.downloaded) {
+      messageEl.textContent = "画像を保存しました。SNS等に添付してシェアしてください";
+      messageEl.hidden = false;
+    }
+  } catch (err) {
+    messageEl.textContent = "画像の生成に失敗しました";
+    messageEl.hidden = false;
+  }
 }
 
 function init() {
@@ -150,6 +210,9 @@ function init() {
 
   document.getElementById("role-mode-toggle").addEventListener("click", toggleRoleMode);
   document.getElementById("draw-button").addEventListener("click", runDraw);
+  document.getElementById("optimal-level-btn").addEventListener("click", applyOptimalLevel);
+  document.getElementById("roster-history-btn").addEventListener("click", openRosterHistoryModal);
+  document.getElementById("share-button").addEventListener("click", handleShareClick);
 
   renderApp();
 }

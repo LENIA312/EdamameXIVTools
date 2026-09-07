@@ -1,12 +1,9 @@
 import { parseCharacterClassJobs, parseSearchResults } from "./parse";
 
-const REGION_HOSTS: Record<string, string> = {
-  jp: "jp.finalfantasyxiv.com",
-  na: "na.finalfantasyxiv.com",
-  eu: "eu.finalfantasyxiv.com",
-  de: "de.finalfantasyxiv.com",
-  fr: "fr.finalfantasyxiv.com",
-};
+// Lodestoneのキャラクター検索・詳細は地域(jp/na/eu)を問わず同一のグローバルDBを
+// 参照するため(worldnameで検索した際に全地域とも同一の結果が返ることを確認済み)、
+// 常に単一のホストで問い合わせる。
+const LODESTONE_HOST = "na.finalfantasyxiv.com";
 
 const LODESTONE_UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
@@ -39,14 +36,11 @@ async function fetchLodestone(url: string): Promise<string> {
 
 async function handleSearch(url: URL): Promise<Response> {
   const name = url.searchParams.get("name")?.trim();
-  const region = url.searchParams.get("region") ?? "jp";
   const world = url.searchParams.get("world")?.trim();
 
   if (!name) return json({ error: "name is required" }, 400);
-  const host = REGION_HOSTS[region];
-  if (!host) return json({ error: `unknown region: ${region}` }, 400);
 
-  const searchUrl = new URL(`https://${host}/lodestone/character/`);
+  const searchUrl = new URL(`https://${LODESTONE_HOST}/lodestone/character/`);
   searchUrl.searchParams.set("q", name);
   if (world) searchUrl.searchParams.set("worldname", world);
 
@@ -62,7 +56,7 @@ async function handleSearch(url: URL): Promise<Response> {
 async function handleCharacter(id: string): Promise<Response> {
   if (!/^\d+$/.test(id)) return json({ error: "invalid character id" }, 400);
 
-  const detailUrl = `https://na.finalfantasyxiv.com/lodestone/character/${id}/class_job/`;
+  const detailUrl = `https://${LODESTONE_HOST}/lodestone/character/${id}/class_job/`;
   try {
     const html = await fetchLodestone(detailUrl);
     const detail = parseCharacterClassJobs(html, id);

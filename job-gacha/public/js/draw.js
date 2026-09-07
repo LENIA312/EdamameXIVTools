@@ -32,10 +32,7 @@ function drawAssignment(characters, roleTemplate, settings) {
 
   const emptySlot = eligiblePerSlot.findIndex((jobs) => jobs.length === 0);
   if (emptySlot !== -1) {
-    return {
-      success: false,
-      error: `${emptySlot + 1}人目の条件(レベル制限・抽選対象設定)を満たすジョブがありません`,
-    };
+    return { success: false, reason: "no-eligible-job", slotIndex: emptySlot };
   }
 
   const order = shuffled([...Array(n).keys()]);
@@ -57,7 +54,7 @@ function drawAssignment(characters, roleTemplate, settings) {
   }
 
   if (!backtrack(0)) {
-    return { success: false, error: "条件を満たす組み合わせが見つかりませんでした" };
+    return { success: false, reason: "no-combination" };
   }
   return { success: true, assignment };
 }
