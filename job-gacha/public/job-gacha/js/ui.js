@@ -172,7 +172,8 @@ function openSearchModal(slotIndex) {
   `;
 
   const message = wrap.querySelector("#search-message");
-  renderCharacterHistoryList(wrap.querySelector("#character-history"), slotIndex, message);
+  const historyEl = wrap.querySelector("#character-history");
+  renderCharacterHistoryList(historyEl, slotIndex, message);
 
   const submit = async () => {
     const name = wrap.querySelector("#search-name").value.trim();
@@ -187,6 +188,7 @@ function openSearchModal(slotIndex) {
       return;
     }
 
+    historyEl.hidden = true;
     resultsEl.innerHTML = `<p class="loading">検索中...</p>`;
     try {
       const results = await searchLodestoneCharacters(name, world);
@@ -333,26 +335,77 @@ function openJobsModal(slotIndex) {
   const wrap = document.createElement("div");
   wrap.innerHTML = `<h2>${escapeHtml(character.name)} の抽選対象ジョブ</h2>`;
 
-  const grid = document.createElement("div");
-  grid.className = "job-grid";
-
-  for (const job of JOBS) {
-    const level = character.jobLevels[job.id] ?? 0;
-    const label = document.createElement("label");
-    label.className = `job-check ${roleColorClassForJob(job)}`;
-    const checked = !character.excludedJobIds.has(job.id);
-    label.innerHTML = `
-      <input type="checkbox" ${checked ? "checked" : ""}>
-      <img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img job-icon-img-small">
-      <span>${escapeHtml(job.nameJa)}</span>
-      <span class="job-level">Lv.${level}</span>
-    `;
-    label.querySelector("input").addEventListener("change", () => {
-      toggleJobExclusion(slotIndex, job.id);
+  const refreshChecks = () => {
+    wrap.querySelectorAll(".job-check input").forEach((input) => {
+      input.checked = !character.excludedJobIds.has(input.dataset.jobId);
     });
-    grid.appendChild(label);
+  };
+
+  const bulkRow = document.createElement("div");
+  bulkRow.className = "job-bulk-row";
+  bulkRow.innerHTML = `
+    <button type="button" class="link-btn" data-action="select-all">全選択</button>
+    <button type="button" class="link-btn" data-action="deselect-all">全解除</button>
+  `;
+  bulkRow.querySelector('[data-action="select-all"]').addEventListener("click", () => {
+    character.excludedJobIds.clear();
+    invalidateResults();
+    refreshChecks();
+  });
+  bulkRow.querySelector('[data-action="deselect-all"]').addEventListener("click", () => {
+    JOBS.forEach((job) => character.excludedJobIds.add(job.id));
+    invalidateResults();
+    refreshChecks();
+  });
+  wrap.appendChild(bulkRow);
+
+  for (const group of JOB_GROUPS) {
+    const section = document.createElement("div");
+    section.className = "job-group";
+
+    const header = document.createElement("div");
+    header.className = "job-group-header";
+    header.innerHTML = `
+      <span class="job-group-title">${escapeHtml(group.label)}</span>
+      <span class="job-group-actions">
+        <button type="button" class="link-btn" data-action="select">選択</button>
+        <button type="button" class="link-btn" data-action="deselect">解除</button>
+      </span>
+    `;
+    header.querySelector('[data-action="select"]').addEventListener("click", () => {
+      group.jobs.forEach((job) => character.excludedJobIds.delete(job.id));
+      invalidateResults();
+      refreshChecks();
+    });
+    header.querySelector('[data-action="deselect"]').addEventListener("click", () => {
+      group.jobs.forEach((job) => character.excludedJobIds.add(job.id));
+      invalidateResults();
+      refreshChecks();
+    });
+    section.appendChild(header);
+
+    const grid = document.createElement("div");
+    grid.className = "job-grid";
+    for (const job of group.jobs) {
+      const level = character.jobLevels[job.id] ?? 0;
+      const label = document.createElement("label");
+      label.className = `job-check ${roleColorClassForJob(job)}`;
+      const checked = !character.excludedJobIds.has(job.id);
+      label.innerHTML = `
+        <input type="checkbox" data-job-id="${job.id}" ${checked ? "checked" : ""}>
+        <img src="${jobIconUrl(job.id)}" alt="${job.id}" class="job-icon-img job-icon-img-small">
+        <span>${escapeHtml(job.nameJa)}</span>
+        <span class="job-level">Lv.${level}</span>
+      `;
+      label.querySelector("input").addEventListener("change", () => {
+        toggleJobExclusion(slotIndex, job.id);
+      });
+      grid.appendChild(label);
+    }
+    section.appendChild(grid);
+
+    wrap.appendChild(section);
   }
-  wrap.appendChild(grid);
 
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";

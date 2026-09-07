@@ -43,6 +43,15 @@ const JOBS = [
 
 const JOBS_BY_ID = Object.fromEntries(JOBS.map((job) => [job.id, job]));
 
+const JOB_GROUPS = [
+  { label: "タンク", jobs: JOBS.filter((j) => j.role === ROLE.TANK) },
+  { label: "純ヒーラー", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.PURE) },
+  { label: "バリアヒーラー", jobs: JOBS.filter((j) => j.role === ROLE.HEALER && j.subtype === SUBTYPE.BARRIER) },
+  { label: "近接DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.MELEE) },
+  { label: "遠隔物理DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.RANGED) },
+  { label: "遠隔魔法DPS", jobs: JOBS.filter((j) => j.role === ROLE.DPS && j.subtype === SUBTYPE.CASTER) },
+];
+
 function jobIconUrl(jobId) {
   return `assets/icons/jobs/${jobId}.png`;
 }

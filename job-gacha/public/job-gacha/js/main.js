@@ -69,6 +69,13 @@ function clearSlot(index) {
   renderApp();
 }
 
+function resetAllCharacters() {
+  state.characters = Array.from({ length: MAX_SLOTS }, createEmptyCharacter);
+  state.roleOverrides = {};
+  invalidateResults();
+  renderApp();
+}
+
 function applyRosterHistoryEntry(entry) {
   state.characters = Array.from({ length: MAX_SLOTS }, (_, i) => {
     const stored = entry.characters[i];
@@ -155,6 +162,8 @@ function runDraw() {
       errorEl.textContent = "条件を満たす組み合わせが見つかりませんでした";
     }
     errorEl.hidden = false;
+    invalidateResults();
+    renderApp();
     return;
   }
 
@@ -212,6 +221,7 @@ function init() {
   document.getElementById("draw-button").addEventListener("click", runDraw);
   document.getElementById("optimal-level-btn").addEventListener("click", applyOptimalLevel);
   document.getElementById("roster-history-btn").addEventListener("click", openRosterHistoryModal);
+  document.getElementById("reset-characters-btn").addEventListener("click", resetAllCharacters);
   document.getElementById("share-button").addEventListener("click", handleShareClick);
 
   renderApp();

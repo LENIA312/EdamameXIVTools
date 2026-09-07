@@ -86,7 +86,9 @@ body {
 
 .toolbar-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
   padding: 0 4px;
 }
 
@@ -126,12 +128,12 @@ body {
 
 .role-icon {
   position: relative;
-  border-radius: 999px;
+  border-radius: 8px;
   width: 40px;
   height: 40px;
   padding: 0;
-  background: #fff;
-  border: 2px solid var(--pink-light);
+  background: none;
+  border: none;
   cursor: pointer;
   transition: transform 0.15s ease;
   display: flex;
@@ -168,9 +170,6 @@ body {
   border: 1px solid #fff;
 }
 
-.role-tank { border-color: var(--tank); }
-.role-healer { border-color: var(--healer); }
-.role-dps { border-color: var(--dps); }
 
 .btn {
   border-radius: 999px;
@@ -377,11 +376,44 @@ body {
 .result-info { display: flex; flex-direction: column; }
 .loading { color: var(--muted); text-align: center; }
 
+.job-bulk-row {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: var(--pink-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+.link-btn:hover { color: var(--pink); }
+
+.job-group { margin-bottom: 16px; }
+.job-group-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.job-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.job-group-actions { display: flex; gap: 10px; }
+.job-group-actions .link-btn { font-size: 11px; font-weight: 400; }
+
 .job-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 16px;
 }
 .job-check {
   display: flex;
