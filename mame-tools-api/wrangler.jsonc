@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mame-tools-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mame-tools",
+      "database_id": "92505ee0-7a0e-44db-bda6-5de30d9acf89",
+      "migrations_dir": "./migrations"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ジョブガチャ 管理 | まめツール</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Ctext%20y%3D'.9em'%20font-size%3D'90'%3E%F0%9F%8E%B2%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="panel header admin-header">
+    <a href="../" class="hub-link">← ジョブガチャ</a>
+    <h1 class="title">管理ページ</h1>
+  </header>
+
+  <div id="login-panel" class="panel admin-panel">
+    <p>Admin Key を入力してください</p>
+    <div class="search-form-row">
+      <input id="admin-key-input" type="password" placeholder="Admin Key">
+      <button id="admin-login-btn" type="button" class="btn btn-primary">ログイン</button>
+    </div>
+    <p id="admin-login-error" class="error" hidden></p>
+  </div>
+
+  <div id="admin-content" class="admin-content" hidden>
+    <div class="panel admin-panel">
+      <h2 class="admin-section-title">公開設定</h2>
+      <label class="checkbox">
+        <input type="checkbox" id="published-toggle">
+        まめツールのトップページに表示する
+      </label>
+      <p id="publish-message" class="notice" hidden></p>
+    </div>
+
+    <div class="panel admin-panel">
+      <h2 class="admin-section-title">統計</h2>
+      <p id="draw-count" class="admin-stat">総抽選回数: -</p>
+    </div>
+
+    <div class="panel admin-panel">
+      <h2 class="admin-section-title">直近の抽選結果</h2>
+      <button id="reload-draws-btn" type="button" class="btn-mini">再読み込み</button>
+      <div id="draws-list" class="admin-draws-list"></div>
+    </div>
+
+    <button id="admin-logout-btn" type="button" class="btn btn-outline btn-small">ログアウト</button>
+  </div>
+</div>
+
+<script src="../js/jobs.js"></script>
+<script src="../js/mame-api.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

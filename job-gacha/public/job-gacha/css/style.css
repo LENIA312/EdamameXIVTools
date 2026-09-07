@@ -323,6 +323,46 @@ body {
   padding: 8px 0 24px;
 }
 
+.admin-header { justify-content: flex-start; gap: 16px; }
+.admin-panel { padding: 20px; margin-bottom: 16px; }
+.admin-section-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--pink-dark);
+  font-weight: 800;
+}
+
+.admin-stat { font-size: 20px; font-weight: 800; color: var(--text); margin: 0; }
+
+.admin-draws-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.admin-draw-row {
+  border: 2px solid var(--pink-light);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.admin-draw-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-draw-entries { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.admin-draw-entry { font-size: 13px; }
+.admin-draw-arrow { color: var(--pink); }
+
 .modal-backdrop {
   position: fixed;
   inset: 0;

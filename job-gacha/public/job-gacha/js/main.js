@@ -173,6 +173,15 @@ function runDraw() {
   });
   shareBtn.hidden = false;
   renderApp();
+
+  recordJobGachaDraw(
+    settings,
+    activeIndexes.map((slotIndex) => {
+      const job = JOBS_BY_ID[state.results[slotIndex]];
+      const c = state.characters[slotIndex];
+      return { name: c.name, world: c.world, jobId: job.id, jobName: job.nameJa };
+    })
+  );
 }
 
 async function handleShareClick() {

@@ -105,3 +105,5 @@ body {
   font-size: 11px;
   color: var(--muted);
 }
+
+.loading { color: var(--muted); font-size: 14px; }
